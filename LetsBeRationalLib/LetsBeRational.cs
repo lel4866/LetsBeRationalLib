@@ -33,7 +33,7 @@ namespace LetsBeRationalLib {
         // s = underlyiong price
         // K = strike
         // t = dte/365
-        // r = annualized risk free rate (1 year treasury yield)
+        // r = annualized risk free rate
         // d = annualized sp500 dividen yield (trailing 12 months)
         public static double ImpliedVolatility(double option_price, double s, double K, double t, double r, double d, OptionType optionType) {
             double deflater = Math.Exp(-r * t);
