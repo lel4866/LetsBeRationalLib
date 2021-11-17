@@ -1,0 +1,120 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\lel48\\VisualStudioProjects\\LetsBeRationalLib.cs\\TestLetsBeRationalLib\\TestLetsBeRationalLib.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\lel48\\VisualStudioProjects\\LetsBeRationalLib.cs\\LetsBeRationalLib\\LetsBeRationalLib.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\lel48\\VisualStudioProjects\\LetsBeRationalLib.cs\\LetsBeRationalLib\\LetsBeRationalLib.csproj",
+        "projectName": "LetsBeRationalLib",
+        "projectPath": "C:\\Users\\lel48\\VisualStudioProjects\\LetsBeRationalLib.cs\\LetsBeRationalLib\\LetsBeRationalLib.csproj",
+        "packagesPath": "C:\\Users\\lel48\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\lel48\\VisualStudioProjects\\LetsBeRationalLib.cs\\LetsBeRationalLib\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\lel48\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\lel48\\VisualStudioProjects\\LetsBeRationalLib.cs\\TestLetsBeRationalLib\\TestLetsBeRationalLib.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\lel48\\VisualStudioProjects\\LetsBeRationalLib.cs\\TestLetsBeRationalLib\\TestLetsBeRationalLib.csproj",
+        "projectName": "TestLetsBeRationalLib",
+        "projectPath": "C:\\Users\\lel48\\VisualStudioProjects\\LetsBeRationalLib.cs\\TestLetsBeRationalLib\\TestLetsBeRationalLib.csproj",
+        "packagesPath": "C:\\Users\\lel48\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\lel48\\VisualStudioProjects\\LetsBeRationalLib.cs\\TestLetsBeRationalLib\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\lel48\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "C:\\Users\\lel48\\VisualStudioProjects\\LetsBeRationalLib.cs\\LetsBeRationalLib\\LetsBeRationalLib.csproj": {
+                "projectPath": "C:\\Users\\lel48\\VisualStudioProjects\\LetsBeRationalLib.cs\\LetsBeRationalLib\\LetsBeRationalLib.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

@@ -65,6 +65,85 @@ namespace LetsBeRationalLib {
         // t: time to expiration in years
         // r: risk-free interest rate
         // d: annualized continuous dividend rate
+        public static double Theta(double s, double K, double t, double r, double sigma, double d, OptionType optionType)
+        {
+            if (t <= 0.0)
+                return 0.0;
+            double sqrt_t = Math.Sqrt(t);
+            double e = Math.Exp(-d * t);
+            double d1 = D1(s, K, t, r, sigma, d);
+            double d2 = d1 - sigma * sqrt_t;
+            double t1 = s*sigma*e / (2.0 * sqrt_t);
+            double t2 = Math.Exp(-d1 * d1 / 2.0) / SQRT_TWO_PI;
+            double t3 = -t1 * t2;
+            double t4;
+            if ((optionType == OptionType.Put))
+                t4 = r * K * Math.Exp(-r * t) * NormalDistribution.norm_cdf(-d2) - d * s * e * NormalDistribution.norm_cdf(-d1);
+            else
+                t4 = -r * K * Math.Exp(-r * t) * NormalDistribution.norm_cdf(d2) + d * s * e * NormalDistribution.norm_cdf(d1);
+            return (t3 + t4) / t;
+        }
+
+        // s: underlying asset price
+        // K: strike price
+        // sigma: annualized standard deviation, or volatility
+        // t: time to expiration in years
+        // r: risk-free interest rate
+        // d: annualized continuous dividend rate
+        public static double Gamma(double s, double K, double t, double r, double sigma, double d, OptionType optionType)
+        {
+            if (t <= 0.0)
+                return 0.0;
+            double d1 = D1(s, K, t, r, sigma, d);
+            double t1 = Math.Exp(-d * t) / (s * sigma * Math.Sqrt(t));
+            double t2 = Math.Exp(-d1 * d1 / 2.0) / SQRT_TWO_PI;
+            return t1 * t2;
+        }
+
+        // s: underlying asset price
+        // K: strike price
+        // sigma: annualized standard deviation, or volatility
+        // t: time to expiration in years
+        // r: risk-free interest rate
+        // d: annualized continuous dividend rate
+        public static double Vega(double s, double K, double t, double r, double sigma, double d, OptionType optionType)
+        {
+            if (t <= 0.0)
+                return 0.0;
+            double d1 = D1(s, K, t, r, sigma, d);
+            double t1 = s * Math.Exp(-d * t) * Math.Sqrt(t) / 100.0;
+            double t2 = Math.Exp(-d1 * d1 / 2.0) / SQRT_TWO_PI;
+            return t1 * t2;
+        }
+
+        // s: underlying asset price
+        // K: strike price
+        // sigma: annualized standard deviation, or volatility
+        // t: time to expiration in years
+        // r: risk-free interest rate
+        // d: annualized continuous dividend rate
+        public static double Rho(double s, double K, double t, double r, double sigma, double d, OptionType optionType)
+        {
+            if (t <= 0.0)
+                return 0.0;
+            double d1 = D1(s, K, t, r, sigma, d);
+            double d2 = d1 - sigma * Math.Sqrt(t);
+
+            double t1 = K * t * Math.Exp(-r * t)/ 100.0;
+            double t2;
+            if (optionType == OptionType.Put)
+                t2 = NormalDistribution.norm_cdf(-d2);
+            else
+                t2 = NormalDistribution.norm_cdf(d2);
+            return t1 * t2;
+        }
+
+        // s: underlying asset price
+        // K: strike price
+        // sigma: annualized standard deviation, or volatility
+        // t: time to expiration in years
+        // r: risk-free interest rate
+        // d: annualized continuous dividend rate
         // From Espen Haug, The Complete Guide To Option Pricing Formulas
         private static double D1(double s, double K, double t, double r, double sigma, double d) {
             double numerator = Math.Log(s / K) + ((r - d) + 0.5 * sigma * sigma) * t;

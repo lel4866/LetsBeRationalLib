@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "TestLetsBeRationalLib/1.0.0": {
+        "dependencies": {
+          "LetsBeRationalLib": "1.0.0"
+        },
+        "runtime": {
+          "TestLetsBeRationalLib.dll": {}
+        }
+      },
+      "LetsBeRationalLib/1.0.0": {
+        "runtime": {
+          "LetsBeRationalLib.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "TestLetsBeRationalLib/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "LetsBeRationalLib/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

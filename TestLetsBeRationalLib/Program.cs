@@ -17,7 +17,6 @@ namespace TestLetsBeRationalLib
 
             // EXPORT_EXTERN_C double implied_volatility_from_a_transformed_rational_guess(double price, double F, double K, double T, double q /* q=±1 */)
             double iv = LetsBeRational.ImpliedVolatility(price, s, K, t, r, d, LetsBeRational.OptionType.Put);
-            int a = 1;
 
             Console.WriteLine($"IV = {iv}");
         }
