@@ -59,12 +59,16 @@ namespace LetsBeRationalLib {
                 return Math.Exp(-q * t) * NormalDistribution.norm_cdf(d1);
         }
 
-        // s: underlying asset price
-        // K: strike price
-        // sigma: annualized standard deviation, or volatility
-        // t: time to expiration in years
-        // r: risk-free interest rate
-        // q: annualized continuous dividend rate
+        /// <summary>
+        /// Computes European option theta.
+        /// <param name="optionType">call or put</param>
+        /// <param name="s">Underlying price</param>
+        /// <param name="K">Strike price</param>
+        /// <param name="t">Time to expiration in fraction of year</param>
+        /// <param name="sigma">Volatility - usually computed implied volatility</param>
+        /// <param name="r">continuously compounded risk-free annual interest rate</param>
+        /// <param name="q">continuously compounded annual dividend yield</param>
+        /// <returns></returns>
         public static double Theta(double s, double K, double t, double r, double sigma, double q, OptionType optionType)
         {
             if (t <= 0.0)
@@ -73,23 +77,13 @@ namespace LetsBeRationalLib {
             double e = Math.Exp(-q * t);
             double d1 = D1(s, K, t, r, sigma, q);
             double d2 = d1 - sigma * sqrt_t;
-            double f1 = -e * s * NormalDistribution.norm_cdf(d1) * sigma / (2 * sqrt_t);
+            double f1 = -e * s * NormalDistribution.norm_pdf(d1) * sigma / (2 * sqrt_t);
             double f2;
             if (optionType == OptionType.Call)
                 f2 = -r * K * Math.Exp(-r * t) * NormalDistribution.norm_cdf(d2) + q * s * e * NormalDistribution.norm_cdf(d1);
             else
-                f2 = -r * K * Math.Exp(-r * t) * NormalDistribution.norm_cdf(-d2) + q * s * e * NormalDistribution.norm_cdf(-d1);
-
-
-            double t1 = s*sigma*e / (2.0 * sqrt_t);
-            double t2 = Math.Exp(-d1 * d1 / 2.0) / SQRT_TWO_PI;
-            double t3 = -t1 * t2;
-            double t4;
-            if (optionType == OptionType.Put)
-                t4 = r * K * Math.Exp(-r * t) * NormalDistribution.norm_cdf(-d2) - q * s * e * NormalDistribution.norm_cdf(-d1);
-            else
-                t4 = -r * K * Math.Exp(-r * t) * NormalDistribution.norm_cdf(d2) + q * s * e * NormalDistribution.norm_cdf(d1);
-            return (t3 + t4) / t;
+                f2 = r * K * Math.Exp(-r * t) * NormalDistribution.norm_cdf(-d2) - q * s * e * NormalDistribution.norm_cdf(-d1);
+            return (f1 + f2) / 365.0;
         }
 
         // s: underlying asset price
@@ -119,7 +113,7 @@ namespace LetsBeRationalLib {
             if (t <= 0.0)
                 return 0.0;
             double d1 = D1(s, K, t, r, sigma, q);
-            return s * Math.Exp(-q * t) * Math.Sqrt(t) * NormalDistribution.norm_cdf(d1);
+            return s * Math.Exp(-q * t) * Math.Sqrt(t) * NormalDistribution.norm_pdf(d1) / 100.0;
         }
 
         // s: underlying asset price
