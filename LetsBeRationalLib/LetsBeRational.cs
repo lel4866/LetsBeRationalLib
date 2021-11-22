@@ -34,11 +34,11 @@ namespace LetsBeRationalLib {
         // K = strike
         // t = dte/365
         // r = annualized risk free rate
-        // d = annualized sp500 dividen yield (trailing 12 months)
-        public static double ImpliedVolatility(double option_price, double s, double K, double t, double r, double d, OptionType optionType) {
+        // q = annualized sp500 dividen yield (trailing 12 months)
+        public static double ImpliedVolatility(double option_price, double s, double K, double t, double r, double q, OptionType optionType) {
             double deflater = Math.Exp(-r * t);
             double undiscounted_option_price = option_price / deflater;
-            double F = s * Math.Exp((r - d) * t);
+            double F = s * Math.Exp((r - q) * t);
             int intOptionType = (optionType == OptionType.Put ? -1 : 1);
             double iv = ImpliedVolatilityFromATransformedRationalGuess(undiscounted_option_price, F, K, t, intOptionType);
             return iv;
@@ -49,39 +49,41 @@ namespace LetsBeRationalLib {
         // sigma: annualized standard deviation, or volatility
         // t: time to expiration in years
         // r: risk-free interest rate
-        // d: annualized continuous dividend rate
-        public static double Delta(double s, double K, double t, double r, double sigma, double d, OptionType optionType) {
-            double d1 = D1(s, K, t, r, sigma, d);
+        // q: annualized continuous dividend rate
+        public static double Delta(double s, double K, double t, double r, double sigma, double q, OptionType optionType) {
+            double d1 = D1(s, K, t, r, sigma, q);
 
             if (optionType == OptionType.Put)
-                return -Math.Exp(-d * t) * NormalDistribution.norm_cdf(-d1);
+                return -Math.Exp(-q * t) * NormalDistribution.norm_cdf(-d1);
             else
-                return Math.Exp(-d * t) * NormalDistribution.norm_cdf(d1);
+                return Math.Exp(-q * t) * NormalDistribution.norm_cdf(d1);
         }
 
-        // s: underlying asset price
-        // K: strike price
-        // sigma: annualized standard deviation, or volatility
-        // t: time to expiration in years
-        // r: risk-free interest rate
-        // d: annualized continuous dividend rate
-        public static double Theta(double s, double K, double t, double r, double sigma, double d, OptionType optionType)
+        /// <summary>
+        /// Computes European option theta.
+        /// <param name="optionType">call or put</param>
+        /// <param name="s">Underlying price</param>
+        /// <param name="K">Strike price</param>
+        /// <param name="t">Time to expiration in fraction of year</param>
+        /// <param name="sigma">Volatility - usually computed implied volatility</param>
+        /// <param name="r">continuously compounded risk-free annual interest rate</param>
+        /// <param name="q">continuously compounded annual dividend yield</param>
+        /// <returns></returns>
+        public static double Theta(double s, double K, double t, double r, double sigma, double q, OptionType optionType)
         {
             if (t <= 0.0)
                 return 0.0;
             double sqrt_t = Math.Sqrt(t);
-            double e = Math.Exp(-d * t);
-            double d1 = D1(s, K, t, r, sigma, d);
+            double e = Math.Exp(-q * t);
+            double d1 = D1(s, K, t, r, sigma, q);
             double d2 = d1 - sigma * sqrt_t;
-            double t1 = s*sigma*e / (2.0 * sqrt_t);
-            double t2 = Math.Exp(-d1 * d1 / 2.0) / SQRT_TWO_PI;
-            double t3 = -t1 * t2;
-            double t4;
-            if ((optionType == OptionType.Put))
-                t4 = r * K * Math.Exp(-r * t) * NormalDistribution.norm_cdf(-d2) - d * s * e * NormalDistribution.norm_cdf(-d1);
+            double f1 = -e * s * NormalDistribution.norm_pdf(d1) * sigma / (2 * sqrt_t);
+            double f2;
+            if (optionType == OptionType.Call)
+                f2 = -r * K * Math.Exp(-r * t) * NormalDistribution.norm_cdf(d2) + q * s * e * NormalDistribution.norm_cdf(d1);
             else
-                t4 = -r * K * Math.Exp(-r * t) * NormalDistribution.norm_cdf(d2) + d * s * e * NormalDistribution.norm_cdf(d1);
-            return (t3 + t4) / t;
+                f2 = r * K * Math.Exp(-r * t) * NormalDistribution.norm_cdf(-d2) - q * s * e * NormalDistribution.norm_cdf(-d1);
+            return (f1 + f2) / 365.0;
         }
 
         // s: underlying asset price
@@ -105,15 +107,13 @@ namespace LetsBeRationalLib {
         // sigma: annualized standard deviation, or volatility
         // t: time to expiration in years
         // r: risk-free interest rate
-        // d: annualized continuous dividend rate
-        public static double Vega(double s, double K, double t, double r, double sigma, double d, OptionType optionType)
+        // q: annualized continuous dividend rate
+        public static double Vega(double s, double K, double t, double r, double sigma, double q, OptionType optionType)
         {
             if (t <= 0.0)
                 return 0.0;
-            double d1 = D1(s, K, t, r, sigma, d);
-            double t1 = s * Math.Exp(-d * t) * Math.Sqrt(t) / 100.0;
-            double t2 = Math.Exp(-d1 * d1 / 2.0) / SQRT_TWO_PI;
-            return t1 * t2;
+            double d1 = D1(s, K, t, r, sigma, q);
+            return s * Math.Exp(-q * t) * Math.Sqrt(t) * NormalDistribution.norm_pdf(d1) / 100.0;
         }
 
         // s: underlying asset price
@@ -121,18 +121,17 @@ namespace LetsBeRationalLib {
         // sigma: annualized standard deviation, or volatility
         // t: time to expiration in years
         // r: risk-free interest rate
-        // d: annualized continuous dividend rate
-        public static double Rho(double s, double K, double t, double r, double sigma, double d, OptionType optionType)
+        // q: annualized continuous dividend rate
+        public static double Rho(double s, double K, double t, double r, double sigma, double q, OptionType optionType)
         {
             if (t <= 0.0)
                 return 0.0;
-            double d1 = D1(s, K, t, r, sigma, d);
+            double d1 = D1(s, K, t, r, sigma, q);
             double d2 = d1 - sigma * Math.Sqrt(t);
-
-            double t1 = K * t * Math.Exp(-r * t)/ 100.0;
+            double t1 = K * t * Math.Exp(-r * t);
             double t2;
             if (optionType == OptionType.Put)
-                t2 = NormalDistribution.norm_cdf(-d2);
+                t2 = -NormalDistribution.norm_cdf(-d2);
             else
                 t2 = NormalDistribution.norm_cdf(d2);
             return t1 * t2;
@@ -143,10 +142,10 @@ namespace LetsBeRationalLib {
         // sigma: annualized standard deviation, or volatility
         // t: time to expiration in years
         // r: risk-free interest rate
-        // d: annualized continuous dividend rate
+        // q: annualized continuous dividend rate
         // From Espen Haug, The Complete Guide To Option Pricing Formulas
-        private static double D1(double s, double K, double t, double r, double sigma, double d) {
-            double numerator = Math.Log(s / K) + ((r - d) + 0.5 * sigma * sigma) * t;
+        private static double D1(double s, double K, double t, double r, double sigma, double q) {
+            double numerator = Math.Log(s / K) + ((r - q) + 0.5 * sigma * sigma) * t;
             double denominator = sigma * Math.Sqrt(t);
             return numerator / denominator;
         }
