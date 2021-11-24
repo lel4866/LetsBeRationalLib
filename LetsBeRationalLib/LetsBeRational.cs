@@ -163,9 +163,13 @@ namespace LetsBeRationalLib {
 
         private static double ImpliedVolatilityFromATransformedRationalGuessWithLimitedIterations(double price, double F, double K, double T, int optionType, int N) {
             double intrinsic = Math.Abs(Math.Max((optionType < 0 ? K - F : F - K), 0.0));
+#if true
             if (price < intrinsic)
-                return VOLATILITY_VALUE_TO_SIGNAL_PRICE_IS_BELOW_INTRINSIC;
-
+            {
+                price = intrinsic + 0.0001;
+                //return VOLATILITY_VALUE_TO_SIGNAL_PRICE_IS_BELOW_INTRINSIC;
+            }
+#endif
             double max_price = optionType < 0 ? K : F;
             if (price >= max_price)
                 return VOLATILITY_VALUE_TO_SIGNAL_PRICE_IS_ABOVE_MAXIMUM;
